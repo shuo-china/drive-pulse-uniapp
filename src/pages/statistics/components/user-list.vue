@@ -78,7 +78,7 @@ const props = defineProps<{
         }
 
         .card-header {
-            margin-bottom: 24rpx;
+            margin-bottom: 18rpx;
 
             .user-info {
                 display: flex;
@@ -153,7 +153,7 @@ const props = defineProps<{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 24rpx;
+            padding-top: 18rpx;
             border-top: 1rpx solid #F1F5F9;
 
             .stat-item {
