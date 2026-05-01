@@ -63,3 +63,24 @@ export function getBalanceCountByChannelIdApi(
     ...options,
   });
 }
+
+export type StatisticsUser = {
+  id: number;
+  uid: string;
+  nickname: string;
+  avatar_path: string;
+  release_count_sum: number;
+  take_count_sum: number;
+  register_days: number;
+};
+export function getUserStatisticsPaginationApi(
+  params: Record<string, any>,
+  options?: HttpRequestConfig,
+) {
+  return request<Pagination<StatisticsUser>>({
+    method: "GET",
+    url: "/user/statistics",
+    params,
+    ...options,
+  });
+}

@@ -31,7 +31,7 @@ const userStore = useUserStore();
 
 const balanceColor = computed(() => {
     const count = props.balanceCount || 0;
-    if (count > 0) return '#0170fe';
+    if (count > 0) return '#52c41a';
     if (count < 0) return '#faad14';
     return '#bfbfbf';
 });

@@ -1,10 +1,11 @@
 <template>
     <view class="page-container">
         <view class="record-group" v-for="group in groupedData" :key="group.date">
-            <!-- 极简日期头 -->
+            <!-- 居中日期头 -->
             <view class="group-header">
+                <view class="header-line"></view>
                 <text class="date-text">{{ group.date }}</text>
-                <text class="count-text">共 {{ group.items.length }} 笔</text>
+                <view class="header-line"></view>
             </view>
 
             <view class="record-item" v-for="item in group.items" :key="item.id">
@@ -13,8 +14,8 @@
                     <!-- 左侧：发起方 -->
                     <view class="user-box">
                         <image class="avatar" :src="item.user?.avatar_path" mode="aspectFill" />
-                        <text class="nickname">{{ item.user?.nickname || '未知' }}</text>
-                        <text class="uid">NO.{{ item.user?.uid || '--' }}</text>
+                        <text class="nickname">{{ item.user?.nickname }}</text>
+                        <text class="uid">编号：{{ item.user?.uid }}</text>
                     </view>
 
                     <!-- 中间：流转核心区 (数量 -> 箭头 -> 时间) -->
@@ -35,9 +36,9 @@
 
                     <!-- 右侧：接收方 -->
                     <view class="user-box">
-                        <image class="avatar" :src="item.target_user?.avatar_path" mode="aspectFill" />
-                        <text class="nickname">{{ item.target_user?.nickname || '未知' }}</text>
-                        <text class="uid">NO.{{ item.target_user?.uid || '--' }}</text>
+                        <image class="avatar" :src="item.targetUser?.avatar_path" mode="aspectFill" />
+                        <text class="nickname">{{ item.targetUser?.nickname || '未知' }}</text>
+                        <text class="uid">编号：{{ item.targetUser?.uid || '--' }}</text>
                     </view>
 
                 </view>
@@ -98,42 +99,50 @@ const groupedData = computed(() => {
 <style scoped lang="scss">
 /* 页面背景建议为浅灰 #F7F8FA，以凸显白色卡片质感 */
 .page-container {
-    padding: 32rpx;
     background-color: #F7F8FA;
     min-height: 100vh;
     box-sizing: border-box;
 }
 
 .record-group {
-    margin-bottom: 40rpx;
+    margin-bottom: 60rpx;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
-/* 极简大气标题 */
+/* 极简居中日期标题 */
 .group-header {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 24rpx;
-    padding: 0 8rpx;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20rpx;
+    padding: 0 20rpx;
 
-    .date-text {
-        font-size: 34rpx;
-        color: #1D2129;
-        font-weight: 600;
-        letter-spacing: 1rpx;
+    .header-line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #E5E6EB, transparent);
     }
 
-    .count-text {
+    .date-text {
+        margin: 0 24rpx;
         font-size: 24rpx;
-        color: #86909C;
+        color: #666;
+        font-weight: 500;
+        background-color: #F2F3F5;
+        padding: 4rpx 20rpx;
+        border-radius: 100rpx;
+        letter-spacing: 1rpx;
     }
 }
 
 /* 卡片样式：微阴影 + 柔和边框，打造极简呼吸感 */
 .record-item {
     background-color: #FFFFFF;
-    border-radius: 24rpx;
-    padding: 40rpx 32rpx;
+    border-radius: 16rpx;
+    padding: 24rpx 12rpx;
     margin-bottom: 24rpx;
     box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.02);
     border: 2rpx solid #F2F3F5;
@@ -150,8 +159,10 @@ const groupedData = computed(() => {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 140rpx;
-        /* 固定宽度，防止中间区域被挤压 */
+        flex: 1;
+        min-width: 0;
+        /* 确保 flex 容器内文本省略生效 */
+        /* 自适应宽度 */
 
         .avatar {
             width: 88rpx;
@@ -163,7 +174,7 @@ const groupedData = computed(() => {
 
         .nickname {
             font-size: 26rpx;
-            color: #1D2129;
+            color: #111;
             font-weight: 500;
             width: 100%;
             text-align: center;
@@ -174,27 +185,27 @@ const groupedData = computed(() => {
         }
 
         .uid {
-            font-size: 22rpx;
-            color: #86909C;
-            font-family: monospace;
+            font-size: 24rpx;
+            color: #666;
         }
     }
 
     /* 中间流转信息区 */
     .flow-center {
-        flex: 1;
+        width: 200rpx;
+        /* 固定宽度，缩短箭头 */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0 32rpx;
+        padding: 0 12rpx;
         margin-top: -12rpx;
         /* 视觉微调，让箭头更对齐头像中心 */
 
         /* 数量 (上) */
         .amount-text {
             font-size: 40rpx;
-            color: #1D2129;
+            color: #0170fe;
             /* 高级深石墨色 */
             font-weight: 700;
             font-family: 'DIN Alternate', monospace;
@@ -234,12 +245,19 @@ const groupedData = computed(() => {
             }
         }
 
-        /* 时间 (下) */
+        /* 时间 (下) - 重新设计为标签样式，更醒目 */
         .time-text {
-            font-size: 22rpx;
-            color: #86909C;
+            font-size: 26rpx;
+            color: #4E5969;
+            background-color: #F2F3F5;
+            padding: 6rpx 12rpx;
+            border-radius: 100rpx;
+            /* 圆角胶囊形状 */
             font-family: 'DIN Alternate', monospace;
+            font-weight: 600;
             letter-spacing: 1rpx;
+            margin-top: 8rpx;
+            display: inline-block;
         }
     }
 }

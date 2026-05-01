@@ -22,7 +22,10 @@
       "path": "pages/take/take"
     },
     {
-      "path": "pages/statistics/statistics"
+      "path": "pages/statistics/statistics",
+      "style": {
+        "navigationBarTitleText": "数据统计"
+      }
     },
     {
       "path": "pages/status/status"

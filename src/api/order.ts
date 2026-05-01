@@ -8,7 +8,7 @@ export type Order = {
     nickname: string;
     avatar_path: string;
   };
-  target_user: {
+  targetUser: {
     uid: string;
     nickname: string;
     avatar_path: string;
