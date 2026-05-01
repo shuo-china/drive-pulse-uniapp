@@ -67,7 +67,7 @@ const props = defineProps<{
     .user-card {
         background-color: #ffffff;
         border-radius: 28rpx;
-        padding: 32rpx;
+        padding: 24rpx;
         margin-bottom: 28rpx;
         box-shadow: 0 4rpx 20rpx rgba(15, 23, 42, 0.03);
         transition: all 0.25s ease;
@@ -153,7 +153,7 @@ const props = defineProps<{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 32rpx;
+            padding-top: 24rpx;
             border-top: 1rpx solid #F1F5F9;
 
             .stat-item {
@@ -164,7 +164,7 @@ const props = defineProps<{
                 justify-content: center;
 
                 .stat-value {
-                    font-size: 38rpx;
+                    font-size: 32rpx;
                     font-weight: 700;
                     color: #0F172A;
                     font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;

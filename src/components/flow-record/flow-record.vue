@@ -100,7 +100,6 @@ const groupedData = computed(() => {
 /* 页面背景建议为浅灰 #F7F8FA，以凸显白色卡片质感 */
 .page-container {
     background-color: #F7F8FA;
-    min-height: 100vh;
     box-sizing: border-box;
 }
 
@@ -165,11 +164,11 @@ const groupedData = computed(() => {
         /* 自适应宽度 */
 
         .avatar {
-            width: 88rpx;
-            height: 88rpx;
+            width: 66rpx;
+            height: 66rpx;
             border-radius: 50%;
             background-color: #F2F3F5;
-            margin-bottom: 16rpx;
+            margin-bottom: 10rpx;
         }
 
         .nickname {

@@ -62,8 +62,6 @@ const props = defineProps<{
 const channelSotre = useChannelStore()
 const { currentChannel } = storeToRefs(channelSotre)
 
-const userOptions = ref<UserOption[]>([])
-
 const getInitialFormData = () => ({
     uid: '',
     count: 1,
@@ -73,7 +71,7 @@ const formData = ref(getInitialFormData())
 
 const matchedUser = computed(() => {
     if (!formData.value.uid) return null
-    return userOptions.value.find(user => user.uid === formData.value.uid)
+    return props.userOptions.find(user => user.uid === formData.value.uid)
 })
 
 const canSubmit = computed(() => {
