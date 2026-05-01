@@ -1,0 +1,67 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/launch/launch"
+    },
+    {
+      "path": "pages/improve/improve"
+    },
+    {
+      "path": "pages/order/order"
+    },
+    {
+      "path": "pages/release/release"
+    },
+    {
+      "path": "pages/take/take"
+    },
+    {
+      "path": "pages/statistics/statistics"
+    },
+    {
+      "path": "pages/status/status"
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "归途同路",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#0170fe",
+    "list": [
+      {
+        "pagePath": "pages/order/order",
+        "iconPath": "static/icons/order.png",
+        "selectedIconPath": "static/icons/order-fill.png",
+        "text": "报单"
+      },
+      {
+        "pagePath": "pages/release/release",
+        "iconPath": "static/icons/release.png",
+        "selectedIconPath": "static/icons/release-fill.png",
+        "text": "放人"
+      },
+      {
+        "pagePath": "pages/take/take",
+        "iconPath": "static/icons/take.png",
+        "selectedIconPath": "static/icons/take-fill.png",
+        "text": "要人"
+      },
+      {
+        "pagePath": "pages/statistics/statistics",
+        "iconPath": "static/icons/statistics.png",
+        "selectedIconPath": "static/icons/statistics-fill.png",
+        "text": "统计"
+      }
+    ]
+  }
+}
