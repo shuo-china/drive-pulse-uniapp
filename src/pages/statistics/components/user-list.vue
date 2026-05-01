@@ -78,7 +78,7 @@ const props = defineProps<{
         }
 
         .card-header {
-            margin-bottom: 32rpx;
+            margin-bottom: 24rpx;
 
             .user-info {
                 display: flex;
@@ -169,7 +169,7 @@ const props = defineProps<{
                     color: #0F172A;
                     font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;
                     line-height: 1.1;
-                    margin-bottom: 10rpx;
+                    margin-bottom: 8rpx;
                     transition: color 0.3s ease;
 
                     &.balance {
