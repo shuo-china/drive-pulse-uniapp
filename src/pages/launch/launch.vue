@@ -21,7 +21,7 @@ onLoad(async () => {
     }
     await useChannelStore().getChannelList()
     uni.reLaunch({
-        url: "/pages/notice/notice"
+        url: "/pages/order/order"
     })
 })
 </script>
