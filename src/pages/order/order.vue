@@ -2,6 +2,7 @@
   <view class="order-container">
     <channel-tabs class="sticky-tabs" @approved-channel-click="approvedInit" />
     <view v-if="currentChannel" class="content-section">
+      <uni-notice-bar v-if="notice" show-icon show-close scrollable :text="notice" :speed="50" class="notice-wrapper" />
       <template v-if="isCurrentChannelApproved">
         <profile :balance-count="balanceCount" :balance-count-loading="balanceCountLoading" />
         <submit :user-options="userOptions" :user-options-loading="userOptionsLoading"
@@ -19,7 +20,8 @@ import profile from './components/profile.vue'
 import submit from './components/submit.vue'
 import { ref } from 'vue';
 import { getBalanceCountByChannelIdApi, getUserOptionsByChannelIdApi } from '@/api/user';
-import { onShow } from '@dcloudio/uni-app';
+import { onLoad, onShow } from '@dcloudio/uni-app';
+import { getNoticeApi } from '@/api/notice';
 
 const store = useChannelStore()
 const { currentChannel, isCurrentChannelApproved } = storeToRefs(store)
@@ -66,6 +68,13 @@ onShow(() => {
     approvedInit()
   }
 })
+
+const notice = ref('')
+onLoad(() => {
+  getNoticeApi().then(res => {
+    notice.value = res || ''
+  })
+})
 </script>
 
 <style>
@@ -90,5 +99,10 @@ page {
     flex: 1;
     padding: 30rpx;
   }
+}
+
+:deep(.notice-wrapper) .uni-noticebar {
+  padding: 16rpx 24rpx;
+  border-radius: 16rpx;
 }
 </style>
