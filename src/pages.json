@@ -13,6 +13,9 @@
       "path": "pages/improve/improve"
     },
     {
+      "path": "pages/notice/notice"
+    },
+    {
       "path": "pages/order/order"
     },
     {
@@ -47,6 +50,12 @@
     "color": "#666666",
     "selectedColor": "#0170fe",
     "list": [
+      {
+        "pagePath": "pages/notice/notice",
+        "iconPath": "static/icons/notice.png",
+        "selectedIconPath": "static/icons/notice-fill.png",
+        "text": "简介"
+      },
       {
         "pagePath": "pages/order/order",
         "iconPath": "static/icons/order.png",

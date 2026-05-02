@@ -36,6 +36,7 @@ import { ref } from 'vue';
 import { applyChannelApi } from '@/api/channel';
 import { storeToRefs } from 'pinia';
 import { useChannelStore } from '@/stores/channel';
+import { useUserStore } from '@/stores/user';
 
 const channelStore = useChannelStore()
 const { channelList, currentChannel } = storeToRefs(channelStore)
@@ -43,6 +44,22 @@ const { channelList, currentChannel } = storeToRefs(channelStore)
 const submitting = ref(false)
 
 const handleApply = () => {
+    if (!useUserStore().userInfo) {
+        uni.showModal({
+            title: '提示',
+            content: '请您先完善个人信息',
+            confirmText: '去完善',
+            success: (res) => {
+                if (res.confirm) {
+                    uni.navigateTo({
+                        url: '/pages/improve/improve',
+                    })
+                }
+            }
+        })
+        return
+    }
+
     uni.showModal({
         title: '提示',
         content: '确定要提交申请吗？',

@@ -29,7 +29,7 @@ export const useChannelStore = defineStore("channel", () => {
       const list = res.map((item) => ({
         id: item.id,
         title: item.title,
-        auditStatus: item.audit_status,
+        auditStatus: item.audit_status ?? 0,
         refuseReason: item.refuse_reason,
       }));
       channelList.value = list;

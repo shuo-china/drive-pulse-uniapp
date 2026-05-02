@@ -76,9 +76,7 @@ const onSubmit = () => {
     })
         .then(() => useChannelStore().getChannelList())
         .then(() => {
-            uni.reLaunch({
-                url: "/pages/order/order"
-            });
+            uni.navigateBack()
         }).finally(() => {
             submitting.value = false
         })

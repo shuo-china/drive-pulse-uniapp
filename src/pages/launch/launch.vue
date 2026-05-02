@@ -18,14 +18,10 @@ onLoad(async () => {
     await userStore.getAccessToken()
     if (userStore.userLevel === UserLevel.Bound) {
         await userStore.getUserInfo()
-        await useChannelStore().getChannelList()
-        uni.reLaunch({
-            url: "/pages/order/order"
-        })
-    } else {
-        uni.reLaunch({
-            url: "/pages/improve/improve"
-        })
     }
+    await useChannelStore().getChannelList()
+    uni.reLaunch({
+        url: "/pages/notice/notice"
+    })
 })
 </script>
