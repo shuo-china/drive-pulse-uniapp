@@ -69,9 +69,12 @@ export type StatisticsUser = {
   uid: string;
   nickname: string;
   avatar_path: string;
-  release_count_sum: number;
-  take_count_sum: number;
   register_days: number;
+  channels: {
+    title: string;
+    audit_status: number;
+    count: number;
+  }[];
 };
 export function getUserStatisticsPaginationApi(
   params: Record<string, any>,

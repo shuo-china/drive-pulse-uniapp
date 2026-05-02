@@ -22,11 +22,18 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => response,
   async (response) => {
-    uni.showToast({
-      title: response.data?.message || response.errMsg,
-      icon: "none",
-      duration: 2000,
-    });
+    console.log(response.config);
+    if (
+      (response.statusCode && response.statusCode >= 500) ||
+      response.config.custom?.showErrorMessage !== false
+    ) {
+      uni.showToast({
+        title: response.data?.message || response.errMsg,
+        icon: "none",
+        duration: 2000,
+      });
+    }
+
     return Promise.reject(response.data || {});
   },
 );

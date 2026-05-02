@@ -92,13 +92,39 @@ const handleSubmit = () => {
                     channel_id: channelId,
                     uid: formData.value.uid,
                     count: formData.value.count,
+                }, {
+                    custom: {
+                        showErrorMessage: false,
+                    }
                 }).then(() => {
                     formData.value = getInitialFormData()
                     emit('submitSuccess')
                     uni.showToast({ title: '提交成功', icon: 'success' })
-                }).finally(() => {
-                    submitting.value = false
                 })
+                    .catch((err) => {
+                        if (err.code === 'BALANCE_LIMIT_USER') {
+                            uni.showModal({
+                                title: '您的结余超限',
+                                content: err.message,
+                                showCancel: false,
+                            })
+                        } else if (err.code === 'BALANCE_LIMIT_TARGET_USER') {
+                            uni.showModal({
+                                title: '对方结余不足',
+                                content: err.message,
+                                showCancel: false,
+                            })
+                        } else {
+                            uni.showToast({
+                                title: err.message,
+                                icon: "none",
+                                duration: 2000,
+                            })
+                        }
+                    })
+                    .finally(() => {
+                        submitting.value = false
+                    })
             }
         }
     })

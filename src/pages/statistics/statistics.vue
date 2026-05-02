@@ -1,52 +1,43 @@
 <template>
     <view class="container">
-        <channel-tabs class="sticky-tabs" @approved-channel-click="approvedInit" />
-        <view v-if="currentChannel" class="content-section">
-            <template v-if="isCurrentChannelApproved">
-                <view class="list-header">
-                    <view class="total-text">
-                        共<text class="count">{{ total }}</text>位用户
-                    </view>
-                    <view class="filter-btn" @tap="searchFormVisible = true">
-                        <uni-icons type="tune" size="16" color="#303133"></uni-icons>
-                        <text class="filter-text">筛选</text>
-                    </view>
+        <view class="content-section">
+            <view class="list-header">
+                <view class="total-text">
+                    共<text class="count">{{ total }}</text>位用户
                 </view>
-                <user-list :data="data as StatisticsUser[]" />
-                <uni-load-more :status="loadMoreStatus" />
-                <pro-search-form v-model:visible="searchFormVisible" @reset="searchReset" @search="search">
-                    <uni-forms label-position="top">
-                        <uni-row :gutter="36">
-                            <uni-col :span="24">
-                                <uni-forms-item label="编号" name="uid">
-                                    <uni-easyinput v-model="searchFormData.uid" type="text" placeholder="请输入编号" />
-                                </uni-forms-item>
-                            </uni-col>
-                            <uni-col :span="24">
-                                <uni-forms-item label="微信名" name="nickname">
-                                    <uni-easyinput v-model="searchFormData.nickname" type="text" placeholder="请输入微信名" />
-                                </uni-forms-item>
-                            </uni-col>
-                        </uni-row>
-                    </uni-forms>
-                </pro-search-form>
-            </template>
-            <channel-audit v-else />
+                <view class="filter-btn" @tap="searchFormVisible = true">
+                    <uni-icons type="tune" size="16" color="#303133"></uni-icons>
+                    <text class="filter-text">筛选</text>
+                </view>
+            </view>
+            <user-list :data="data as StatisticsUser[]" />
+            <uni-load-more :status="loadMoreStatus" />
+            <pro-search-form v-model:visible="searchFormVisible" @reset="searchReset" @search="search">
+                <uni-forms label-position="top">
+                    <uni-row :gutter="36">
+                        <uni-col :span="24">
+                            <uni-forms-item label="编号" name="uid">
+                                <uni-easyinput v-model="searchFormData.uid" type="text" placeholder="请输入编号" />
+                            </uni-forms-item>
+                        </uni-col>
+                        <uni-col :span="24">
+                            <uni-forms-item label="微信名" name="nickname">
+                                <uni-easyinput v-model="searchFormData.nickname" type="text" placeholder="请输入微信名" />
+                            </uni-forms-item>
+                        </uni-col>
+                    </uni-row>
+                </uni-forms>
+            </pro-search-form>
         </view>
     </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useChannelStore } from '@/stores/channel'
+import { onShow } from '@dcloudio/uni-app'
 import useLoadMore from '@/hooks/useLoadMore'
 import { getUserStatisticsPaginationApi, StatisticsUser } from '@/api/user'
-import { onShow } from '@dcloudio/uni-app'
 import UserList from './components/user-list.vue'
-
-const channelStore = useChannelStore()
-const { isCurrentChannelApproved, currentChannel } = storeToRefs(channelStore)
 
 const searchFormVisible = ref(false)
 const getInitialSearchFormData = () => ({
@@ -63,23 +54,11 @@ const { data, loadMoreStatus, total, search: _search, } =
     useLoadMore(getUserStatisticsPaginationApi, { manual: true });
 
 const search = () => {
-    _search({
-        ...searchFormData.value,
-        channel_id: currentChannel.value?.id,
-    })
-}
-
-const approvedInit = () => {
-    const channelId = currentChannel.value?.id
-    if (channelId) {
-        search()
-    }
+    _search(searchFormData.value)
 }
 
 onShow(() => {
-    if (isCurrentChannelApproved.value) {
-        approvedInit()
-    }
+    search()
 })
 </script>
 

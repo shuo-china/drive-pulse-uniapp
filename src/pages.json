@@ -16,10 +16,16 @@
       "path": "pages/order/order"
     },
     {
-      "path": "pages/release/release"
+      "path": "pages/release/release",
+      "style": {
+        "navigationBarTitleText": "我的放人"
+      }
     },
     {
-      "path": "pages/take/take"
+      "path": "pages/take/take",
+      "style": {
+        "navigationBarTitleText": "我的要人"
+      }
     },
     {
       "path": "pages/statistics/statistics",
