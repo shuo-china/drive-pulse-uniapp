@@ -2,7 +2,7 @@
   <view class="order-container">
     <channel-tabs class="sticky-tabs" @approved-channel-click="approvedInit" />
     <view v-if="currentChannel" class="content-section">
-      <uni-notice-bar v-if="notice" show-icon show-close scrollable :text="notice" :speed="50" class="notice-wrapper" />
+      <uni-notice-bar v-if="notice" show-icon show-close scrollable :text="notice" :speed="70" class="notice-wrapper" />
       <template v-if="isCurrentChannelApproved">
         <profile :balance-count="balanceCount" :balance-count-loading="balanceCountLoading" />
         <submit :user-options="userOptions" :user-options-loading="userOptionsLoading"
@@ -102,7 +102,6 @@ page {
 }
 
 :deep(.notice-wrapper) .uni-noticebar {
-  padding: 16rpx 24rpx;
   border-radius: 16rpx;
 }
 </style>
