@@ -102,13 +102,7 @@ const handleSubmit = () => {
                     uni.showToast({ title: '提交成功', icon: 'success' })
                 })
                     .catch((err) => {
-                        if (err.code === 'BALANCE_LIMIT_USER') {
-                            uni.showModal({
-                                title: '您的结余超限',
-                                content: err.message,
-                                showCancel: false,
-                            })
-                        } else if (err.code === 'BALANCE_LIMIT_TARGET_USER') {
+                        if (err.code === 'BALANCE_LIMIT') {
                             uni.showModal({
                                 title: '对方结余不足',
                                 content: err.message,
