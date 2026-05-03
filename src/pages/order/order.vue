@@ -3,8 +3,9 @@
     <channel-tabs class="sticky-tabs" @approved-channel-click="approvedInit" />
     <view v-if="currentChannel" class="content-section">
       <template v-if="isCurrentChannelApproved">
-        <profile :balance-count="balanceCount" :balance-count-loading="balanceCountLoading" />
-        <submit :user-options="userOptions" :user-options-loading="userOptionsLoading"
+        <profile :balance-count="balanceCount" :balance-count-loading="balanceCountLoading"
+          :notice-title="noticeTitle" />
+        <submit :user-options="userOptions" :user-options-loading="userOptionsLoading" :notice-title="noticeTitle"
           @submit-success="getBalanceCount" />
       </template>
       <channel-audit v-else />
@@ -15,11 +16,12 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useChannelStore } from '@/stores/channel';
-import profile from './components/profile.vue'
-import submit from './components/submit.vue'
 import { ref } from 'vue';
 import { getBalanceCountByChannelIdApi, getUserOptionsByChannelIdApi } from '@/api/user';
 import { onShow } from '@dcloudio/uni-app';
+import { getNoticeApi } from '@/api/notice';
+import profile from './components/profile.vue'
+import submit from './components/submit.vue'
 
 const store = useChannelStore()
 const { currentChannel, isCurrentChannelApproved } = storeToRefs(store)
@@ -56,9 +58,21 @@ const getUserOptions = () => {
   }
 }
 
+let isNoticeTitleLoaded = false
+const noticeTitle = ref('')
+const getNoticeTitle = () => {
+  if (!isNoticeTitleLoaded) {
+    getNoticeApi().then(res => {
+      noticeTitle.value = res?.title || ''
+      isNoticeTitleLoaded = true
+    })
+  }
+}
+
 const approvedInit = () => {
   getBalanceCount()
   getUserOptions()
+  getNoticeTitle()
 }
 
 onShow(() => {
@@ -66,6 +80,8 @@ onShow(() => {
     approvedInit()
   }
 })
+
+
 </script>
 
 <style>

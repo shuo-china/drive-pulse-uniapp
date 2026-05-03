@@ -10,7 +10,10 @@
       "path": "pages/launch/launch"
     },
     {
-      "path": "pages/improve/improve"
+      "path": "pages/improve/improve",
+      "style": {
+        "navigationBarTitleText": "完善个人信息"
+      }
     },
     {
       "path": "pages/order/order"
@@ -35,6 +38,12 @@
     },
     {
       "path": "pages/status/status"
+    },
+    {
+      "path": "pages/notice/notice",
+      "style": {
+        "navigationBarTitleText": "消息公告"
+      }
     }
   ],
   "globalStyle": {

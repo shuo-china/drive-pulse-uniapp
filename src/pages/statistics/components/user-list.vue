@@ -1,6 +1,7 @@
 <template>
     <view class="list-section">
-        <view v-for="(item, index) in props.data" :key="index" class="user-card">
+        <view v-for="(item, index) in data" :key="index" class="user-card"
+            :class="{ 'is-me': userInfo?.id === item.id }">
             <view class="card-header">
                 <view class="user-info">
                     <image :src="item.avatar_path" class="avatar" mode="aspectFill"></image>
@@ -35,6 +36,11 @@
 
 <script setup lang="ts">
 import { StatisticsUser } from '@/api/user';
+import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore()
+const { userInfo } = storeToRefs(userStore)
 
 const props = defineProps<{
     data: StatisticsUser[];
@@ -57,6 +63,13 @@ const getCountColor = (count: number | string) => {
         margin-bottom: 28rpx;
         box-shadow: 0 4rpx 20rpx rgba(15, 23, 42, 0.03);
         transition: all 0.25s ease;
+        border: 2rpx solid transparent;
+
+        &.is-me {
+            border-color: #3B82F6;
+            background-color: #F8FAFF;
+            box-shadow: 0 4rpx 24rpx rgba(59, 130, 246, 0.08);
+        }
 
         &:active {
             transform: scale(0.99);
