@@ -67,8 +67,11 @@ const getCountColor = (count: number | string) => {
 
         &.is-me {
             border-color: #3B82F6;
-            background-color: #F8FAFF;
+            background-color: #EFF6FF;
             box-shadow: 0 4rpx 24rpx rgba(59, 130, 246, 0.08);
+            position: sticky;
+            top: 98rpx;
+            z-index: 10;
         }
 
         &:active {

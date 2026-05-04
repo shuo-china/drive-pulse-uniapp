@@ -118,10 +118,17 @@ page {
         padding: 30rpx;
 
         .list-header {
+            position: sticky;
+            top: 44px;
+            /* 假设 channel-tabs 的高度为 44px */
+            z-index: 9;
+            background-color: #f5f7fa;
+            padding: 24rpx 0;
+            margin-top: -30rpx;
+            margin-bottom: 6rpx;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24rpx;
 
             .total-text {
                 font-size: 26rpx;

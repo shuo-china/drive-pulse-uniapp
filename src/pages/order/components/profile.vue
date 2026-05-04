@@ -68,6 +68,7 @@ const goToNotice = () => {
     background-color: #ffffff;
     border-radius: 16rpx;
     margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 
     .profile-wrapper {
         display: flex;

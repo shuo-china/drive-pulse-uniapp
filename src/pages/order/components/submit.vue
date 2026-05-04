@@ -131,12 +131,12 @@ const handleSubmit = () => {
 .submit-container {
     padding: 0;
     margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 
     .form-card {
         overflow: hidden;
         background-color: #fff;
         border-radius: 16rpx;
-        box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 
         .form-wrapper {
             padding: 40rpx 30rpx;

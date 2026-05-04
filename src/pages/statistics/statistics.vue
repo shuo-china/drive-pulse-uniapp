@@ -69,12 +69,6 @@ page {
 </style>
 
 <style lang="scss" scoped>
-.sticky-tabs {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
 .container {
     min-height: 100vh;
     display: flex;
@@ -85,10 +79,17 @@ page {
         padding: 30rpx;
 
         .list-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f5f7fa;
+            height: 98rpx;
+            box-sizing: border-box;
+            margin-top: -30rpx;
+            margin-bottom: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24rpx;
 
             .total-text {
                 font-size: 26rpx;
