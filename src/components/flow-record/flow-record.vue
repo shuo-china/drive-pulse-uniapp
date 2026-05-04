@@ -104,7 +104,7 @@ const groupedData = computed(() => {
 }
 
 .record-group {
-    margin-bottom: 60rpx;
+    margin-bottom: 50rpx;
 
     &:last-child {
         margin-bottom: 0;
