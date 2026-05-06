@@ -175,7 +175,7 @@ page {
 
     .content-section {
         flex: 1;
-        padding: 0 30rpx 30rpx;
+        padding: 30rpx;
     }
 }
 </style>

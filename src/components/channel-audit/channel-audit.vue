@@ -103,8 +103,7 @@ const handleApply = () => {
     flex-direction: column;
     align-items: center;
     background-color: #fff;
-    border-radius: 24rpx;
-    padding: 80rpx 40rpx;
+    padding: 60rpx 0 80rpx;
     box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 }
 
@@ -112,7 +111,6 @@ const handleApply = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 60rpx;
 
     .tips {
         margin-top: 40rpx;
@@ -138,6 +136,7 @@ const handleApply = () => {
 }
 
 .primary-btn {
+    margin-top: 60rpx;
     width: 80%;
     height: 88rpx;
     line-height: 88rpx;
