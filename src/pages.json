@@ -50,7 +50,9 @@
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "万里顺行",
     "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "backgroundColor": "#F8F8F8",
+    "enableShareAppMessage": true,
+    "enableShareTimeline": true
   },
   "tabBar": {
     "color": "#666666",

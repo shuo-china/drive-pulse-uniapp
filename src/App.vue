@@ -2,4 +2,5 @@
 import {
   onLaunch,
 } from "@dcloudio/uni-app";
+
 </script>
