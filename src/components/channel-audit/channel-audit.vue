@@ -3,11 +3,11 @@
         <!-- 0 = 未申请 -->
         <view v-if="currentChannel?.auditStatus === 0" class="status-wrapper">
             <view class="empty-state">
-                <uni-icons type="chat" size="80" color="#0170fe"></uni-icons>
-                <text class="tips">您还未申请加入该群</text>
-                <text class="sub-tips">加入群后即可开始使用</text>
+                <uni-icons type="staff" size="80" color="#0170fe"></uni-icons>
+                <text class="tips">您还未加入该分组</text>
+                <text class="sub-tips">加入后即可开始使用</text>
             </view>
-            <button class="primary-btn" :loading="submitting" :disabled="submitting" @tap="handleApply">申请加入群</button>
+            <button class="primary-btn" :loading="submitting" :disabled="submitting" @tap="handleApply">申请加入</button>
         </view>
 
         <!-- 1 = 待审核 -->
