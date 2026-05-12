@@ -5,7 +5,7 @@ import * as Pinia from "pinia";
 const DEFAULT_SHARE_TITLE = "万里顺行";
 const DEFAULT_SHARE_PATH = "/pages/launch/launch";
 const APP_MESSAGE_SHARE_IMAGE = "/static/share_app_message.png";
-const TIMELINE_SHARE_IMAGE = "/static/share_timeline.png";
+const TIMELINE_SHARE_IMAGE = "/static/logo.png";
 
 export function createApp() {
   const app = createSSRApp(App);

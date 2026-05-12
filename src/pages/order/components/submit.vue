@@ -6,15 +6,15 @@
 
                 <!-- 用户编号输入 -->
                 <view class="form-item">
-                    <text class="label">对方编号</text>
-                    <input class="input" type="number" v-model="formData.uid" placeholder="请输入对方编号" />
+                    <text class="label">编号/微信名</text>
+                    <input class="input" type="text" v-model="formData.keyword" placeholder="请输入对方编号或微信名" />
                 </view>
 
                 <!-- 对方用户信息展示 -->
                 <view class="user-status-wrapper">
                     <!-- 状态1：未输入 -->
-                    <view class="status-box empty" v-if="!formData.uid">
-                        <text class="status-text">输入编号自动匹配用户</text>
+                    <view class="status-box empty" v-if="!formData.keyword">
+                        <text class="status-text">输入编号或微信名自动匹配用户</text>
                     </view>
 
                     <!-- 状态2：未找到 -->
@@ -65,15 +65,16 @@ const channelSotre = useChannelStore()
 const { currentChannel } = storeToRefs(channelSotre)
 
 const getInitialFormData = () => ({
-    uid: '',
+    keyword: '',
     count: 1,
 })
 
 const formData = ref(getInitialFormData())
 
 const matchedUser = computed(() => {
-    if (!formData.value.uid) return null
-    return props.userOptions.find(user => user.uid === formData.value.uid)
+    const keyword = String(formData.value.keyword ?? '').trim()
+    if (!keyword) return null
+    return props.userOptions.find(user => String(user.uid) === keyword) || props.userOptions.find(user => user.nickname?.includes(keyword))
 })
 
 const canSubmit = computed(() => {
@@ -92,7 +93,7 @@ const handleSubmit = () => {
                 submitting.value = true
                 createOrderApi({
                     channel_id: channelId,
-                    uid: formData.value.uid,
+                    uid: matchedUser.value?.uid,
                     count: formData.value.count,
                 }, {
                     custom: {

@@ -80,8 +80,6 @@ onShow(() => {
     approvedInit()
   }
 })
-
-
 </script>
 
 <style>

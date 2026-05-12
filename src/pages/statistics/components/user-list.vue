@@ -72,6 +72,14 @@ const getCountColor = (count: number | string) => {
             position: sticky;
             top: 98rpx;
             z-index: 10;
+
+            .card-stats-row {
+                border-top: 1rpx solid rgba(59, 130, 246, 0.08);
+
+                .stat-divider {
+                    background-color: rgba(59, 130, 246, 0.08);
+                }
+            }
         }
 
         &:active {

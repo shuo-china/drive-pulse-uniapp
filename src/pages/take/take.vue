@@ -87,7 +87,7 @@ const search = () => {
 const approvedInit = () => {
     const channelId = currentChannel.value?.id
     if (channelId) {
-        search()
+        searchReset()
     }
 }
 

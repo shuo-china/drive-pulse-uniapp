@@ -50,7 +50,7 @@ const searchReset = () => {
     search()
 }
 
-const { data, loadMoreStatus, total, search: _search, } =
+const { data, loadMoreStatus, total, search: _search } =
     useLoadMore(getUserStatisticsPaginationApi, { manual: true });
 
 const search = () => {
@@ -58,7 +58,7 @@ const search = () => {
 }
 
 onShow(() => {
-    search()
+    searchReset()
 })
 </script>
 
