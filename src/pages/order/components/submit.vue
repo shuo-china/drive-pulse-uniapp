@@ -19,7 +19,7 @@
 
                     <!-- 状态2：未找到 -->
                     <view class="status-box error" v-else-if="!matchedUser">
-                        <text class="status-text">未找到该用户，请核对编号</text>
+                        <text class="status-text">未找到该用户，请核对编号或微信名</text>
                     </view>
 
                     <!-- 状态3：已找到 -->
