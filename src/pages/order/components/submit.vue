@@ -45,12 +45,12 @@
             </view>
         </view>
 
-        <!-- 确认提交弹窗 -->
+        <!-- 确认信息弹窗 -->
         <uni-popup ref="confirmPopup" type="dialog">
-            <uni-popup-dialog type="info" cancelText="取消" confirmText="确定" title="确认提交" @confirm="handleConfirm">
+            <uni-popup-dialog type="info" cancelText="取消" confirmText="确定" title="确认信息" @confirm="handleConfirm">
                 <view class="modal-content">
                     确定在<text class="highlight">{{ currentChannel?.title }}</text>放给对方<text class="highlight">{{
-                        formData.count }}</text> 人吗？
+                        formData.count }}</text>人吗？
                 </view>
             </uni-popup-dialog>
         </uni-popup>
@@ -257,47 +257,49 @@ const handleConfirm = () => {
                                 font-weight: 500;
                                 display: -webkit-box;
                                 -webkit-box-orient: vertical;
-                                -webkit-line-clamp: 1;
+                                // 不限制行数
+                                -webkit-line-clamp: none;
                                 overflow: hidden;
+                                word-break: break-all;
                             }
                         }
 
                         .id {
-                            font-size: 24rpx;
-                            color: #999;
-                            background-color: #f5f5f5;
+                            font-size: 26rpx;
+                            color: #666;
+                            background: #f7f7f7;
                             padding: 4rpx 12rpx;
                             border-radius: 4rpx;
+                            flex-shrink: 0;
                         }
                     }
                 }
             }
 
             .submit-btn {
-                width: 100%;
-                height: 88rpx;
-                line-height: 88rpx;
-                background: linear-gradient(135deg, #0170fe 0%, #01a3fe 100%);
+                background-color: #0170fe;
                 color: #fff;
                 font-size: 32rpx;
-                font-weight: bold;
+                font-weight: 500;
                 border-radius: 44rpx;
-                border: none;
+                margin-top: 40rpx;
+                height: 88rpx;
+                line-height: 88rpx;
                 box-shadow: 0 8rpx 20rpx rgba(1, 112, 254, 0.2);
-                transition: all 0.3s;
+                transition: all 0.2s;
+
+                &:active {
+                    transform: scale(0.98);
+                    background-color: #0162e0;
+                }
 
                 &::after {
                     border: none;
                 }
 
-                &:active {
-                    transform: scale(0.98);
-                    box-shadow: 0 4rpx 10rpx rgba(1, 112, 254, 0.2);
-                }
-
                 &[disabled] {
-                    background: #e0e0e0;
-                    color: #999;
+                    background-color: #a0cfff;
+                    color: #fff;
                     box-shadow: none;
                 }
             }
