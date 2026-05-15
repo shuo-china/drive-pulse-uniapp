@@ -44,6 +44,16 @@
                 </button>
             </view>
         </view>
+
+        <!-- 确认提交弹窗 -->
+        <uni-popup ref="confirmPopup" type="dialog">
+            <uni-popup-dialog type="info" cancelText="取消" confirmText="确定" title="确认提交" @confirm="handleConfirm">
+                <view class="modal-content">
+                    确定在<text class="highlight">{{ currentChannel?.title }}</text>放给对方<text class="highlight">{{
+                        formData.count }}</text> 人吗？
+                </view>
+            </uni-popup-dialog>
+        </uni-popup>
     </view>
 </template>
 
@@ -82,49 +92,47 @@ const canSubmit = computed(() => {
 })
 
 const submitting = ref(false)
+const confirmPopup = ref()
+
 const handleSubmit = () => {
-    uni.showModal({
-        title: '确认提交',
-        content: `确定要放给【${matchedUser.value?.nickname || ''}】 ${formData.value.count} 人吗？`,
-        success: (res) => {
-            if (res.confirm) {
-                const channelId = currentChannel.value?.id
-                if (!channelId) return
-                submitting.value = true
-                createOrderApi({
-                    channel_id: channelId,
-                    uid: matchedUser.value?.uid,
-                    count: formData.value.count,
-                }, {
-                    custom: {
-                        showErrorMessage: false,
-                    }
-                }).then(() => {
-                    formData.value = getInitialFormData()
-                    emit('submitSuccess')
-                    uni.showToast({ title: '提交成功', icon: 'success' })
-                })
-                    .catch((err) => {
-                        if (err.code === 'BALANCE_LIMIT') {
-                            uni.showModal({
-                                title: '对方结余不足',
-                                content: err.message,
-                                showCancel: false,
-                            })
-                        } else {
-                            uni.showToast({
-                                title: err.message,
-                                icon: "none",
-                                duration: 2000,
-                            })
-                        }
-                    })
-                    .finally(() => {
-                        submitting.value = false
-                    })
-            }
+    confirmPopup.value.open()
+}
+
+const handleConfirm = () => {
+    const channelId = currentChannel.value?.id
+    if (!channelId) return
+    submitting.value = true
+    createOrderApi({
+        channel_id: channelId,
+        uid: matchedUser.value?.uid,
+        count: formData.value.count,
+    }, {
+        custom: {
+            showErrorMessage: false,
         }
+    }).then(() => {
+        formData.value = getInitialFormData()
+        emit('submitSuccess')
+        uni.showToast({ title: '提交成功', icon: 'success' })
     })
+        .catch((err) => {
+            if (err.code === 'BALANCE_LIMIT') {
+                uni.showModal({
+                    title: '对方结余不足',
+                    content: err.message,
+                    showCancel: false,
+                })
+            } else {
+                uni.showToast({
+                    title: err.message,
+                    icon: "none",
+                    duration: 2000,
+                })
+            }
+        })
+        .finally(() => {
+            submitting.value = false
+        })
 }
 </script>
 
@@ -249,51 +257,64 @@ const handleSubmit = () => {
                                 font-weight: 500;
                                 display: -webkit-box;
                                 -webkit-box-orient: vertical;
-                                -webkit-line-clamp: 2;
+                                -webkit-line-clamp: 1;
                                 overflow: hidden;
-                                word-break: break-all;
                             }
                         }
 
                         .id {
-                            font-size: 26rpx;
-                            color: #666;
-                            background: #f7f7f7;
+                            font-size: 24rpx;
+                            color: #999;
+                            background-color: #f5f5f5;
                             padding: 4rpx 12rpx;
-                            border-radius: 8rpx;
-                            flex-shrink: 0;
+                            border-radius: 4rpx;
                         }
                     }
                 }
             }
 
             .submit-btn {
-                background-color: #0170fe;
-                color: #fff;
-                font-size: 32rpx;
-                font-weight: 500;
-                border-radius: 44rpx;
-                margin-top: 40rpx;
+                width: 100%;
                 height: 88rpx;
                 line-height: 88rpx;
+                background: linear-gradient(135deg, #0170fe 0%, #01a3fe 100%);
+                color: #fff;
+                font-size: 32rpx;
+                font-weight: bold;
+                border-radius: 44rpx;
+                border: none;
                 box-shadow: 0 8rpx 20rpx rgba(1, 112, 254, 0.2);
-                transition: all 0.2s;
-
-                &:active {
-                    transform: scale(0.98);
-                    background-color: #0162e0;
-                }
+                transition: all 0.3s;
 
                 &::after {
                     border: none;
                 }
 
+                &:active {
+                    transform: scale(0.98);
+                    box-shadow: 0 4rpx 10rpx rgba(1, 112, 254, 0.2);
+                }
+
                 &[disabled] {
-                    background-color: #a0cfff;
-                    color: #fff;
+                    background: #e0e0e0;
+                    color: #999;
                     box-shadow: none;
                 }
             }
+        }
+    }
+
+    .modal-content {
+        padding: 20rpx 0;
+        font-size: 30rpx;
+        color: #333;
+        line-height: 1.6;
+        text-align: center;
+
+        .highlight {
+            color: #0170fe;
+            font-weight: bold;
+            margin: 0 4rpx;
         }
     }
 }
