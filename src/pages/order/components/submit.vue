@@ -257,7 +257,6 @@ const handleConfirm = () => {
                                 font-weight: 500;
                                 display: -webkit-box;
                                 -webkit-box-orient: vertical;
-                                // 不限制行数
                                 -webkit-line-clamp: none;
                                 overflow: hidden;
                                 word-break: break-all;
@@ -307,7 +306,6 @@ const handleConfirm = () => {
     }
 
     .modal-content {
-        padding: 20rpx 0;
         font-size: 30rpx;
         color: #333;
         line-height: 1.6;
