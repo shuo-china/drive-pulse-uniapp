@@ -33,33 +33,20 @@ export function improveUserInfoApi(
   });
 }
 
-export type UserOption = {
-  id: number;
-  uid: string;
-  avatar_path: string;
-  nickname: string;
-};
+export type UserOptionsMap = Record<
+  number,
+  {
+    id: number;
+    uid: string;
+    avatar_path: string;
+    nickname: string;
+  }[]
+>;
 
-export function getUserOptionsByChannelIdApi(
-  channelId: number,
-  options?: HttpRequestConfig,
-) {
+export function getUserOptionsApi(options?: HttpRequestConfig) {
   return request({
-    url: "/user/getOptionsByChannelId",
+    url: "/user/getOptions",
     method: "GET",
-    params: { channel_id: channelId },
-    ...options,
-  });
-}
-
-export function getBalanceCountByChannelIdApi(
-  channelId: number,
-  options?: HttpRequestConfig,
-) {
-  return request({
-    url: "/user/getBananceCountByChannelId",
-    method: "GET",
-    params: { channel_id: channelId },
     ...options,
   });
 }

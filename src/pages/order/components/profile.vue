@@ -8,13 +8,28 @@
                     <text class="uid">编号: {{ userStore.userInfo?.uid }}</text>
                 </view>
             </view>
-            <view class="balance">
-                <view v-if="balanceCountLoading" class="balance-loading">
-                    <view class="loading-spinner"></view>
-                </view>
-                <text v-else class="balance-value" :style="{ color: balanceColor }">{{ balanceCount }}<text
-                        class="unit">人</text></text>
-                <text class="balance-label">结余数量</text>
+        </view>
+
+        <!-- 结余统计展示 -->
+        <view class="balance-section">
+            <view v-if="channelsLoading" class="balance-loading">
+                <view class="loading-spinner"></view>
+                <text class="loading-text">加载中...</text>
+            </view>
+            <view v-else-if="channels && channels.length" class="balance-row">
+                <template v-for="(item, index) in channels" :key="index">
+                    <view class="balance-item" :class="{ 'is-disabled': item.balance_count === null }">
+                        <text class="balance-value"
+                            :style="item.balance_count !== null ? { color: getCountColor(item.balance_count) } : {}">
+                            {{ item.balance_count !== null ? item.balance_count : '-' }}
+                        </text>
+                        <text class="balance-label">{{ item.title }}</text>
+                    </view>
+                    <view v-if="index < channels.length - 1" class="balance-divider"></view>
+                </template>
+            </view>
+            <view v-else class="balance-empty">
+                <text class="empty-text">暂无结余数据</text>
             </view>
         </view>
 
@@ -37,23 +52,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useUserStore } from '@/stores/user';
 
 const props = defineProps<{
-    balanceCount: number,
-    balanceCountLoading: boolean,
+    channels: {
+        title: string
+        balance_count: number | null
+    }[],
+    channelsLoading: boolean,
     noticeTitle: string,
 }>()
 
 const userStore = useUserStore();
 
-const balanceColor = computed(() => {
-    const count = props.balanceCount || 0;
-    if (count > 0) return '#52c41a';
-    if (count < 0) return '#faad14';
+const getCountColor = (count: number) => {
+    const val = Number(count) || 0;
+    if (val > 0) return '#52c41a';
+    if (val < 0) return '#faad14';
     return '#bfbfbf';
-});
+};
 
 const goToNotice = () => {
     uni.navigateTo({
@@ -74,7 +91,7 @@ const goToNotice = () => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 32rpx;
+        padding: 16rpx 32rpx;
 
         .user-info {
             display: flex;
@@ -86,6 +103,7 @@ const goToNotice = () => {
                 border-radius: 50%;
                 margin-right: 24rpx;
                 background-color: #f8f8f8;
+                flex-shrink: 0;
             }
 
             .details {
@@ -108,45 +126,75 @@ const goToNotice = () => {
                 }
             }
         }
+    }
 
-        .balance {
+    .balance-section {
+        padding: 16rpx 32rpx;
+        border-top: 1rpx solid #f5f5f5;
+
+        .balance-loading {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
+            padding: 8rpx 0;
 
-            .balance-loading {
-                height: 52rpx;
+            .loading-text {
+                font-size: 24rpx;
+                color: #999;
+                margin-left: 12rpx;
+            }
+        }
+
+        .balance-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .balance-item {
+                flex: 1;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                margin-bottom: 6rpx;
-            }
+                justify-content: center;
 
-            .loading-spinner {
-                width: 34rpx;
-                height: 34rpx;
-                border: 4rpx solid #d9d9d9;
-                border-top-color: #0170fe;
-                border-radius: 50%;
-                animation: spin 0.8s linear infinite;
-            }
+                &.is-disabled {
 
-            .balance-value {
-                font-size: 48rpx;
-                font-weight: bold;
-                line-height: 1.1;
-                margin-bottom: 6rpx;
+                    .balance-value,
+                    .balance-label {
+                        color: #bfbfbf !important;
+                    }
+                }
 
-                .unit {
-                    font-size: 28rpx;
-                    font-weight: normal;
-                    margin-left: 4rpx;
+                .balance-value {
+                    font-size: 32rpx;
+                    font-weight: 700;
+                    color: #0F172A;
+                    font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;
+                    margin-bottom: 4rpx;
+                    line-height: 1;
+                }
+
+                .balance-label {
+                    font-size: 24rpx;
+                    color: #333;
+                    letter-spacing: 1rpx;
                 }
             }
 
-            .balance-label {
+            .balance-divider {
+                width: 2rpx;
+                height: 40rpx;
+                background-color: #f0f0f0;
+            }
+        }
+
+        .balance-empty {
+            text-align: center;
+            padding: 8rpx 0;
+
+            .empty-text {
                 font-size: 24rpx;
-                color: #666666;
+                color: #999;
             }
         }
     }

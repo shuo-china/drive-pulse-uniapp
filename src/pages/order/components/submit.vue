@@ -4,42 +4,60 @@
             <view class="form-wrapper">
                 <view class="title">我要报单</view>
 
-                <!-- 用户编号输入 -->
+                <!-- 分组选择 -->
                 <view class="form-item">
-                    <text class="label">编号/微信名</text>
-                    <input class="input" type="text" v-model="formData.keyword" placeholder="请输入对方编号或微信名" />
-                </view>
-
-                <!-- 对方用户信息展示 -->
-                <view class="user-status-wrapper">
-                    <!-- 状态1：未输入 -->
-                    <view class="status-box empty" v-if="!formData.keyword">
-                        <text class="status-text">输入编号或微信名自动匹配用户</text>
-                    </view>
-
-                    <!-- 状态2：未找到 -->
-                    <view class="status-box error" v-else-if="!matchedUser">
-                        <text class="status-text">未找到该用户，请核对编号或微信名</text>
-                    </view>
-
-                    <!-- 状态3：已找到 -->
-                    <view class="status-box success" v-else>
-                        <view class="user-basic">
-                            <image class="avatar" :src="matchedUser.avatar_path" mode="aspectFill" />
-                            <text class="name">{{ matchedUser.nickname }}</text>
+                    <text class="label">选择分组</text>
+                    <picker class="picker" @change="handleChannelChange"
+                        :value="selectedIndex === -1 ? 0 : selectedIndex" :range="channelList" range-key="title">
+                        <view class="picker-value" :class="{ 'placeholder': !selectedChannel }">
+                            <text>{{ selectedChannel ? selectedChannel.title : '请选择分组' }}</text>
+                            <uni-icons type="bottom" size="14" color="#999" />
                         </view>
-                        <text class="id">编号: {{ matchedUser.uid }}</text>
-                    </view>
+                    </picker>
                 </view>
 
-                <!-- 数量输入 -->
-                <view class="form-item">
-                    <text class="label">报单数量</text>
-                    <uni-number-box v-model="formData.count" :min="1" />
-                </view>
+                <template v-if="selectedChannel">
+                    <template v-if="selectedChannel.auditStatus === 2">
+                        <!-- 用户编号输入 -->
+                        <view class="form-item">
+                            <text class="label">编号/微信名</text>
+                            <input class="input" type="text" v-model="formData.keyword" placeholder="请输入对方编号或微信名" />
+                        </view>
+
+                        <!-- 对方用户信息展示 -->
+                        <view class="user-status-wrapper">
+                            <!-- 状态1：未输入 -->
+                            <view class="status-box empty" v-if="!formData.keyword">
+                                <text class="status-text">输入编号或微信名自动匹配用户</text>
+                            </view>
+
+                            <!-- 状态2：未找到 -->
+                            <view class="status-box error" v-else-if="!matchedUser">
+                                <text class="status-text">未找到该用户，请核对编号或微信名</text>
+                            </view>
+
+                            <!-- 状态3：已找到 -->
+                            <view class="status-box success" v-else>
+                                <view class="user-basic">
+                                    <image class="avatar" :src="matchedUser.avatar_path" mode="aspectFill" />
+                                    <text class="name">{{ matchedUser.nickname }}</text>
+                                </view>
+                                <text class="id">编号: {{ matchedUser.uid }}</text>
+                            </view>
+                        </view>
+
+                        <!-- 数量输入 -->
+                        <view class="form-item">
+                            <text class="label">报单数量</text>
+                            <uni-number-box v-model="formData.count" :min="1" />
+                        </view>
+                    </template>
+                    <channel-audit v-else :channel-id="selectedChannel.id" />
+                </template>
 
                 <!-- 提交按钮 -->
-                <button class="submit-btn" :disabled="!canSubmit" :loading="submitting" @tap="handleSubmit">
+                <button v-if="!selectedChannel || selectedChannel.auditStatus === 2" class="submit-btn"
+                    :disabled="!canSubmit" :loading="submitting" @tap="handleSubmit">
                     提交
                 </button>
             </view>
@@ -49,7 +67,7 @@
         <uni-popup ref="confirmPopup" type="dialog">
             <uni-popup-dialog type="info" cancelText="取消" confirmText="确定" title="确认信息" @confirm="handleConfirm">
                 <view class="modal-content">
-                    确定在<text class="highlight">{{ currentChannel?.title }}</text>放给对方<text class="highlight">{{
+                    确定在<text class="highlight">{{ selectedChannel?.title || '' }}</text>放给对方<text class="highlight">{{
                         formData.count }}</text>人吗？
                 </view>
             </uni-popup-dialog>
@@ -59,20 +77,29 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia';
-import { useChannelStore } from '@/stores/channel';
 import { createOrderApi } from '@/api/order';
-import { type UserOption } from '@/api/user'
+import { type UserOptionsMap } from '@/api/user'
+import ChannelAudit from '@/components/channel-audit/channel-audit.vue'
+import { useChannelStore } from '@/stores/channel';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/user';
+import { onShow } from '@dcloudio/uni-app';
 
 const emit = defineEmits(['submitSuccess'])
 
 const props = defineProps<{
-    userOptions: UserOption[]
+    userOptions: UserOptionsMap
     userOptionsLoading: boolean
 }>()
 
-const channelSotre = useChannelStore()
-const { currentChannel } = storeToRefs(channelSotre)
+const channelStore = useChannelStore()
+const { channelList } = storeToRefs(channelStore)
+
+const selectedIndex = ref(-1)
+
+const selectedChannel = computed(() => {
+    return channelList.value[selectedIndex.value] || null
+})
 
 const getInitialFormData = () => ({
     keyword: '',
@@ -81,25 +108,37 @@ const getInitialFormData = () => ({
 
 const formData = ref(getInitialFormData())
 
+const handleChannelChange = (e: any) => {
+    selectedIndex.value = Number(e.detail.value)
+}
+
 const matchedUser = computed(() => {
     const keyword = String(formData.value.keyword ?? '').trim()
-    if (!keyword) return null
-    return props.userOptions.find(user => String(user.uid) === keyword) || props.userOptions.find(user => user.nickname?.includes(keyword))
+    if (!keyword || !selectedChannel.value) return null
+    const channelId = selectedChannel.value.id
+    const options = props.userOptions[channelId] || []
+    return options.find(user => String(user.uid) === keyword) || options?.find(user => user.nickname?.includes(keyword))
 })
 
 const canSubmit = computed(() => {
-    return matchedUser.value && formData.value.count && !props.userOptionsLoading && !submitting.value
+    return selectedChannel.value &&
+        selectedChannel.value.auditStatus === 2 &&
+        matchedUser.value &&
+        formData.value.count &&
+        !props.userOptionsLoading &&
+        !submitting.value
 })
 
 const submitting = ref(false)
 const confirmPopup = ref()
 
+const userStore = useUserStore()
 const handleSubmit = () => {
     confirmPopup.value.open()
 }
 
 const handleConfirm = () => {
-    const channelId = currentChannel.value?.id
+    const channelId = selectedChannel.value?.id
     if (!channelId) return
     submitting.value = true
     createOrderApi({
@@ -112,6 +151,7 @@ const handleConfirm = () => {
         }
     }).then(() => {
         formData.value = getInitialFormData()
+        selectedIndex.value = -1
         emit('submitSuccess')
         uni.showToast({ title: '提交成功', icon: 'success' })
     })
@@ -134,6 +174,11 @@ const handleConfirm = () => {
             submitting.value = false
         })
 }
+
+onShow(() => {
+    formData.value = getInitialFormData()
+    selectedIndex.value = -1
+})
 </script>
 
 <style lang="scss" scoped>
@@ -154,7 +199,7 @@ const handleConfirm = () => {
                 font-size: 34rpx;
                 font-weight: bold;
                 color: #333;
-                margin-bottom: 40rpx;
+                margin-bottom: 16rpx;
                 display: flex;
                 align-items: center;
                 line-height: 1;
@@ -174,9 +219,8 @@ const handleConfirm = () => {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 30rpx;
+                padding: 30rpx 0;
                 border-bottom: 2rpx solid #f0f0f0;
-                padding-bottom: 24rpx;
                 transition: all 0.3s;
 
                 &:focus-within {
@@ -187,6 +231,42 @@ const handleConfirm = () => {
                     font-size: 28rpx;
                     color: #333;
                     font-weight: 500;
+                    flex-shrink: 0;
+                    margin-right: 20rpx;
+                }
+
+                .picker {
+                    flex: 1;
+
+                    .picker-value {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        font-size: 28rpx;
+                        color: #333;
+
+                        &.placeholder {
+                            color: #999;
+                        }
+
+                        text {
+                            margin-right: 8rpx;
+                        }
+
+                        .loading-icon {
+                            animation: rotate 1s linear infinite;
+                        }
+                    }
+                }
+
+                @keyframes rotate {
+                    from {
+                        transform: rotate(0deg);
+                    }
+
+                    to {
+                        transform: rotate(360deg);
+                    }
                 }
 
                 .input {
@@ -197,7 +277,7 @@ const handleConfirm = () => {
             }
 
             .user-status-wrapper {
-                margin-bottom: 40rpx;
+                margin-top: 30rpx;
 
                 .status-box {
                     display: flex;

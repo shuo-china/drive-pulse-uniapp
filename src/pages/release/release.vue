@@ -1,20 +1,20 @@
 <template>
     <view class="container">
         <view class="sticky-header">
-            <channel-tabs @approved-channel-click="approvedInit" />
-            <view v-if="currentChannel && isCurrentChannelApproved" class="list-header">
-                <view class="total-text">
-                    共<text class="count">{{ total }}</text>条记录
-                </view>
-                <view class="filter-btn" @tap="searchFormVisible = true">
-                    <uni-icons type="tune" size="16" color="#303133"></uni-icons>
-                    <text class="filter-text">筛选</text>
-                </view>
-            </view>
+            <channel-tabs @channel-click="init" />
         </view>
 
         <view v-if="currentChannel" class="content-section">
             <template v-if="isCurrentChannelApproved">
+                <view class="list-header">
+                    <view class="total-text">
+                        共<text class="count">{{ total }}</text>条记录
+                    </view>
+                    <view class="filter-btn" @tap="searchFormVisible = true">
+                        <uni-icons type="tune" size="16" color="#303133"></uni-icons>
+                        <text class="filter-text">筛选</text>
+                    </view>
+                </view>
                 <flow-record :data="data" />
                 <uni-load-more :status="loadMoreStatus" />
                 <pro-search-form v-model:visible="searchFormVisible" @reset="searchReset" @search="search">
@@ -41,7 +41,7 @@
                     </uni-forms>
                 </pro-search-form>
             </template>
-            <channel-audit v-else />
+            <channel-audit v-else :channel-id="currentChannel.id" />
         </view>
     </view>
 </template>
@@ -84,17 +84,16 @@ const search = () => {
     })
 }
 
-const approvedInit = () => {
-    const channelId = currentChannel.value?.id
-    if (channelId) {
+const init = async () => {
+    if (currentChannel.value?.auditStatus === 1) {
+        await channelStore.getChannelList()
+    } else if (currentChannel.value?.auditStatus === 2) {
         searchReset()
     }
 }
 
 onShow(() => {
-    if (isCurrentChannelApproved.value) {
-        approvedInit()
-    }
+    init()
 })
 </script>
 
@@ -110,62 +109,6 @@ page {
     top: 0;
     z-index: 10;
     background-color: #f5f7fa;
-
-    .list-header {
-        padding: 24rpx 30rpx;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #f5f7fa;
-
-        .total-text {
-            font-size: 26rpx;
-            color: #909399;
-            display: flex;
-            align-items: center;
-            line-height: 1;
-
-            &::before {
-                content: '';
-                display: block;
-                width: 6rpx;
-                height: 28rpx;
-                background-color: #3B82F6;
-                border-radius: 6rpx;
-                margin-right: 16rpx;
-            }
-
-            .count {
-                color: #303133;
-                font-weight: 600;
-                margin: 0 8rpx;
-                font-size: 30rpx;
-                line-height: 1;
-            }
-        }
-
-        .filter-btn {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            padding: 6rpx 20rpx;
-            border-radius: 100rpx;
-            box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
-
-            &:active {
-                transform: scale(0.95);
-                background-color: #f5f7fa;
-            }
-
-            .filter-text {
-                font-size: 26rpx;
-                color: #303133;
-                margin-left: 8rpx;
-                font-weight: 500;
-            }
-        }
-    }
 }
 
 .container {
@@ -176,6 +119,62 @@ page {
     .content-section {
         flex: 1;
         padding: 30rpx;
+
+        .list-header {
+            padding-bottom: 24rpx;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f5f7fa;
+
+            .total-text {
+                font-size: 26rpx;
+                color: #909399;
+                display: flex;
+                align-items: center;
+                line-height: 1;
+
+                &::before {
+                    content: '';
+                    display: block;
+                    width: 6rpx;
+                    height: 28rpx;
+                    background-color: #3B82F6;
+                    border-radius: 6rpx;
+                    margin-right: 16rpx;
+                }
+
+                .count {
+                    color: #303133;
+                    font-weight: 600;
+                    margin: 0 8rpx;
+                    font-size: 30rpx;
+                    line-height: 1;
+                }
+            }
+
+            .filter-btn {
+                display: flex;
+                align-items: center;
+                background-color: #fff;
+                padding: 6rpx 20rpx;
+                border-radius: 100rpx;
+                box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+                transition: all 0.2s;
+
+                &:active {
+                    transform: scale(0.95);
+                    background-color: #f5f7fa;
+                }
+
+                .filter-text {
+                    font-size: 26rpx;
+                    color: #303133;
+                    margin-left: 8rpx;
+                    font-weight: 500;
+                }
+            }
+        }
     }
 }
 </style>

@@ -32,14 +32,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { applyChannelApi } from '@/api/channel';
 import { storeToRefs } from 'pinia';
 import { useChannelStore } from '@/stores/channel';
 import { useUserStore } from '@/stores/user';
 
+const props = defineProps<{
+    channelId: number,
+}>()
+
 const channelStore = useChannelStore()
-const { channelList, currentChannel } = storeToRefs(channelStore)
+const { channelList } = storeToRefs(channelStore)
+
+const currentChannel = computed(() => {
+    return channelList.value.find(item => item.id === props.channelId)
+})
 
 const submitting = ref(false)
 
@@ -65,7 +73,7 @@ const handleApply = () => {
         content: '确定要提交申请吗？',
         success: (res) => {
             if (res.confirm) {
-                const channelId = currentChannel.value?.id
+                const channelId = props.channelId
                 if (channelId) {
                     submitting.value = true
                     applyChannelApi({
@@ -103,7 +111,7 @@ const handleApply = () => {
     flex-direction: column;
     align-items: center;
     background-color: #fff;
-    padding: 60rpx 0 80rpx;
+    padding: 60rpx 0;
     box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 }
 

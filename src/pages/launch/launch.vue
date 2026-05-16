@@ -29,13 +29,14 @@ import { UserLevel } from "@/utils/enums";
 import { useChannelStore } from "@/stores/channel";
 
 const userStore = useUserStore()
+const channelStore = useChannelStore()
 
 onLoad(async () => {
     await userStore.getAccessToken()
     if (userStore.userLevel === UserLevel.Bound) {
         await userStore.getUserInfo()
     }
-    await useChannelStore().getChannelList()
+    await channelStore.getChannelList()
     uni.reLaunch({
         url: "/pages/order/order"
     })

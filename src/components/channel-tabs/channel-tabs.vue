@@ -9,16 +9,14 @@
 import { useChannelStore } from '@/stores/channel';
 import { storeToRefs } from 'pinia';
 
-const emit = defineEmits(['approvedChannelClick'])
+const emit = defineEmits(['channelClick'])
 
 const channelStore = useChannelStore()
-const { channelList, currentChannel, currentChannelIndex, isCurrentChannelApproved } = storeToRefs(channelStore)
+const { channelList, currentChannel, currentChannelIndex } = storeToRefs(channelStore)
 
 const handleClickTab = ({ currentIndex }) => {
     currentChannel.value = channelList.value[currentIndex]
-    if (isCurrentChannelApproved.value) {
-        emit('approvedChannelClick', currentChannel.value)
-    }
+    emit('channelClick', currentChannel.value)
 }
 </script>
 

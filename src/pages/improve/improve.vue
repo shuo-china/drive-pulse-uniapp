@@ -23,7 +23,7 @@
 
         <button class="submit-btn" :class="{ 'is-disabled': !canSubmit }" :disabled="!canSubmit" :loading="submitting"
             @tap="onSubmit">
-            确认登录
+            确认提交
         </button>
     </view>
 </template>
@@ -51,11 +51,21 @@ const canSubmit = computed(() => {
 const onChooseAvatar = (e: any) => {
     const { avatarUrl: url } = e.detail;
     uploading.value = true
+    uni.showLoading({
+        title: '上传中...',
+        mask: true
+    })
     uploadFileApi(url).then((res) => {
         formData.value.avatarKey = res.key;
         formData.value.avatarPath = res.path;
+    }).catch(() => {
+        uni.showToast({
+            title: '上传失败',
+            icon: 'none'
+        })
     }).finally(() => {
         uploading.value = false
+        uni.hideLoading()
     })
 };
 
@@ -68,6 +78,18 @@ const onSubmit = () => {
         return;
     }
 
+    uni.showModal({
+        title: '提示',
+        content: '确认提交个人信息吗？',
+        success: (res) => {
+            if (res.confirm) {
+                performSubmit();
+            }
+        }
+    });
+};
+
+const performSubmit = () => {
     submitting.value = true
     const userStore = useUserStore()
     userStore.improveUserInfo({

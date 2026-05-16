@@ -9,6 +9,14 @@ export function getChannelListApi(options?: HttpRequestConfig) {
   });
 }
 
+export function getChannelsApi(options?: HttpRequestConfig) {
+  return request({
+    url: "/channel/getChannels",
+    method: "GET",
+    ...options,
+  });
+}
+
 export function applyChannelApi(
   data: Record<string, any>,
   options?: HttpRequestConfig,

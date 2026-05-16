@@ -117,7 +117,6 @@ const groupedData = computed(() => {
     align-items: center;
     justify-content: center;
     margin-bottom: 20rpx;
-    padding: 0 20rpx;
 
     .header-line {
         flex: 1;
